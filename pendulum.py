@@ -103,3 +103,35 @@ class Pendulum:
     def kinetic(self):
         """Return array with kinetic energy of pendulum as a function of t"""
         return 0.5*self.M*(self.vx**2 + self.vy**2)
+
+if __name__ == "__main__":
+    pend = Pendulum(L=2.7)
+    pend.solve((pi/6, 0.15), 10, 0.05)
+    plt.plot(pend.t, pend.theta, label=r"$\theta(t)$")
+    plt.title(r"Angle $\theta$ as a function of time")
+    plt.xlabel(r"$t$"); plt.ylabel(r"$\theta$")
+    plt.legend()
+
+    plt.figure()
+    plt.plot(pend.t, pend.potential, label=r"$P(t)$")
+    plt.title(r"Potential energy $P$ as a function of time")
+    plt.xlabel(r"$t$"); plt.ylabel("Energy (J)")
+    plt.legend()
+
+    plt.figure()
+    plt.plot(pend.t, pend.kinetic, label=r"$K(t)$")
+    plt.title(r"Kinetic energy $K$ as a function of time")
+    plt.xlabel(r"$t$"); plt.ylabel("Energy (J)")
+    plt.legend()
+
+    plt.figure()
+    plt.plot(pend.t, pend.potential+pend.kinetic,
+             label=r"$E(t)$")
+    plt.title(r"Total energy $E = P + K$ as a function of time")
+    plt.xlabel(r"$t$"); plt.ylabel("Energy (J)")
+    plt.legend()
+    plt.show()
+
+    """The last graph should be constant, i.e. a line, 
+    but varies because of roundoff errors.
+    """
