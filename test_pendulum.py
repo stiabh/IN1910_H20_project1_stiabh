@@ -1,5 +1,5 @@
 from pendulum import *
-from math import pi
+from numpy import pi
 
 def test_Pendulum_params():
     tol = 1e-10
