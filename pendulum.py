@@ -70,3 +70,11 @@ class Pendulum:
             return self._y[1]
         else:
             raise AttributeError("Method solve has not been called")
+
+    @property
+    def x(self):
+        return self.L*sin(self.theta)
+
+    @property
+    def y(self):
+        return -self.L*cos(self.theta)

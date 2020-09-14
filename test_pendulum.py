@@ -39,3 +39,10 @@ def test_Pendulum_theta_omega_array_values():
     assert np.all(pend.t == np.arange(0, T+dt, dt))
     assert np.all(pend.theta == 0)
     assert np.all(pend.omega == 0)
+
+def test_Pendulum_check_cartesian_coordinates_conv():
+    tol = 1e-10
+    pend = Pendulum(L=2)
+    pend.solve((pi/2, pi/4), 10, 0.1)
+    r2 = pend.x**2 + pend.y**2
+    np.all(abs(r2 - pend.L**2) < tol)
