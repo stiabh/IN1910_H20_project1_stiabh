@@ -1,6 +1,6 @@
 import numpy as np
-from numpy import cos, sin, pi
 import matplotlib.pyplot as plt
+from numpy import cos, sin, pi
 from scipy.integrate import solve_ivp
 
 
@@ -30,9 +30,9 @@ class Pendulum:
     def solve(self, y0, T, dt, angles="rad"):
         """Solve set of ODEs using scipy.
 
-        y0 = (theta0, omega0): Initial conditions
+        y0: Tuple (theta0, omega0) with initial conditions
         T: End of interval (0, T)
-        dt: Time step
+        dt: Time step for interval
         angles: deg (degrees) or rad (radians)
         """
         _theta0, _omega0 = y0[0], y0[1]
@@ -48,4 +48,25 @@ class Pendulum:
         _t_eval = np.arange(0, T+dt, dt)
         _sol = solve_ivp(self.__call__, (0, T), (_theta0, _omega0),
                          t_eval=_t_eval)
-        self.t, self.y = _sol.t, _sol.y
+        self._t, self._y = _sol.t, _sol.y
+
+    @property
+    def t(self):
+        if hasattr(self, "_t"):
+            return self._t
+        else:
+            raise AttributeError("Method solve has not been called")
+
+    @property
+    def theta(self):
+        if hasattr(self, "_y"):
+            return self._y[0]
+        else:
+            raise AttributeError("Method solve has not been called")
+
+    @property
+    def omega(self):
+        if hasattr(self, "_y"):
+            return self._y[1]
+        else:
+            raise AttributeError("Method solve has not been called")
