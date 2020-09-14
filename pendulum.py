@@ -104,34 +104,66 @@ class Pendulum:
         """Return array with kinetic energy of pendulum as a function of t"""
         return 0.5*self.M*(self.vx**2 + self.vy**2)
 
+
+class DampenedPendulum(Pendulum):
+    def __init__(self, L=1, M=1, g=9.81, B=0.5):
+        super().__init__(L, M, g)
+        self.B = B
+
+    def __call__(self, t, y):
+        """Return RHS of ODEs."""
+        _theta = y[0]
+        _omega = y[1]
+
+        _dtheta_dt = _omega
+        _domega_dt = -self.g/self.L*sin(_theta) - self.B/self.M*_omega
+
+        return _dtheta_dt, _domega_dt
+
+
 if __name__ == "__main__":
     pend = Pendulum(L=2.7)
     pend.solve((pi/6, 0.15), 10, 0.05)
     plt.plot(pend.t, pend.theta, label=r"$\theta(t)$")
     plt.title(r"Angle $\theta$ as a function of time")
-    plt.xlabel(r"$t$"); plt.ylabel(r"$\theta$")
+    plt.xlabel(r"$t$")
+    plt.ylabel(r"$\theta$")
     plt.legend()
 
     plt.figure()
     plt.plot(pend.t, pend.potential, label=r"$P(t)$")
     plt.title(r"Potential energy $P$ as a function of time")
-    plt.xlabel(r"$t$"); plt.ylabel("Energy (J)")
+    plt.xlabel(r"$t$")
+    plt.ylabel("Energy (J)")
     plt.legend()
 
     plt.figure()
     plt.plot(pend.t, pend.kinetic, label=r"$K(t)$")
     plt.title(r"Kinetic energy $K$ as a function of time")
-    plt.xlabel(r"$t$"); plt.ylabel("Energy (J)")
+    plt.xlabel(r"$t$")
+    plt.ylabel("Energy (J)")
     plt.legend()
 
     plt.figure()
     plt.plot(pend.t, pend.potential+pend.kinetic,
              label=r"$E(t)$")
     plt.title(r"Total energy $E = P + K$ as a function of time")
-    plt.xlabel(r"$t$"); plt.ylabel("Energy (J)")
+    plt.xlabel(r"$t$")
+    plt.ylabel("Energy (J)")
     plt.legend()
-    plt.show()
 
-    """The last graph should be constant, i.e. a line, 
+    """The previous graph should be constant, i.e. a line, 
     but varies because of roundoff errors.
     """
+
+    damp_pend = DampenedPendulum(L=2.7, B=0.2)
+    damp_pend.solve((pi/6, 0.15), 10, 0.05)
+
+    plt.figure()
+    plt.plot(damp_pend.t, damp_pend.potential+damp_pend.kinetic,
+             label=r"$E(t)$")
+    plt.title(r"Total energy $E = P + K$ as a function of time (dampened)")
+    plt.xlabel(r"$t$")
+    plt.ylabel("Energy (J)")
+    plt.legend()
+    plt.show()
