@@ -60,7 +60,7 @@ class Pendulum:
 
     @property
     def theta(self):
-        """Return array with theta as a function of time t."""
+        """Return array with theta as a function of t."""
         if hasattr(self, "_y"):
             return self._y[0]
         else:
@@ -68,7 +68,7 @@ class Pendulum:
 
     @property
     def omega(self):
-        """Return array with omega as a function of time t."""
+        """Return array with omega as a function of t."""
         if hasattr(self, "_y"):
             return self._y[1]
         else:
@@ -76,14 +76,30 @@ class Pendulum:
 
     @property
     def x(self):
-        """Return array with x-coordinates as a function of time t."""
+        """Return array with pendulum x-coordinates as a function of t."""
         return self.L*sin(self.theta)
 
     @property
     def y(self):
-        """Return array with y-coordinates as a function of time t."""
+        """Return array with pendulum y-coordinates as a function of t."""
         return -self.L*cos(self.theta)
 
     @property
     def potential(self):
-        """Return array with potential energy of pendulum."""
+        """Return array with potential energy of pendulum as a function of t."""
+        return self.M*self.g*(self.y + self.L)
+
+    @property
+    def vx(self):
+        """Return array with pendulum velocity (x axis) as a function of t"""
+        return np.gradient(self.x, self.t)
+
+    @property
+    def vy(self):
+        """Return array with pendulum velocity (y axis) as a function of t"""
+        return np.gradient(self.y, self.t)
+
+    @property
+    def kinetic(self):
+        """Return array with kinetic energy of pendulum as a function of t"""
+        return 0.5*self.M*(self.vx**2 + self.vy**2)
