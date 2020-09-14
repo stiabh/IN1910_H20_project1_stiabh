@@ -30,6 +30,7 @@ def test_Pendulum_property_exceptions():
         pend.theta
         pend.omega
 
+
 def test_Pendulum_theta_omega_array_values():
     pend = Pendulum()
     y0 = (0, 0)
@@ -39,6 +40,7 @@ def test_Pendulum_theta_omega_array_values():
     assert np.all(pend.t == np.arange(0, T+dt, dt))
     assert np.all(pend.theta == 0)
     assert np.all(pend.omega == 0)
+
 
 def test_Pendulum_check_cartesian_coordinates_conv():
     tol = 1e-10

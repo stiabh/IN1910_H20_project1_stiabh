@@ -52,6 +52,7 @@ class Pendulum:
 
     @property
     def t(self):
+        """Return array with time points on (0, T], in steps of dt."""
         if hasattr(self, "_t"):
             return self._t
         else:
@@ -59,6 +60,7 @@ class Pendulum:
 
     @property
     def theta(self):
+        """Return array with theta as a function of time t."""
         if hasattr(self, "_y"):
             return self._y[0]
         else:
@@ -66,6 +68,7 @@ class Pendulum:
 
     @property
     def omega(self):
+        """Return array with omega as a function of time t."""
         if hasattr(self, "_y"):
             return self._y[1]
         else:
@@ -73,8 +76,14 @@ class Pendulum:
 
     @property
     def x(self):
+        """Return array with x-coordinates as a function of time t."""
         return self.L*sin(self.theta)
 
     @property
     def y(self):
+        """Return array with y-coordinates as a function of time t."""
         return -self.L*cos(self.theta)
+
+    @property
+    def potential(self):
+        """Return array with potential energy of pendulum."""
