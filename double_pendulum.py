@@ -70,7 +70,7 @@ class DoublePendulum:
         else:
             raise ValueError("Angles must be set to deg or rad")
 
-        _t_eval = np.arange(0, T+dt, dt)
+        _t_eval = np.arange(0, T, dt)
         _sol = solve_ivp(self.__call__, (0, T), (theta1_0, omega1_0, 
                          theta2_0, omega2_0), t_eval=_t_eval, method="Radau")
         self._t, self._y = _sol.t, _sol.y
@@ -178,9 +178,15 @@ class DoublePendulum:
                                     (0, self.y1[i], self.y2[i]))
             return self.pendulums,
 
+    def show_animation(self):
+        plt.show()
+
+    def save_animation(self, filename, fps=60):
+        self.animation.save(filename, fps=fps)
+
 if __name__ == "__main__":
     pend = DoublePendulum()
-    pend.solve((pi/2, pi/3, pi/4, pi/6), 10, 0.01)
+    pend.solve((pi/2, pi/3, pi/4, pi/6), 10, 1/60)
 
 #     plt.plot(pend.t, pend.potential, label=r"$P(t)$")
 #     plt.title(r"Total potential energy $P$ as a function of time")
