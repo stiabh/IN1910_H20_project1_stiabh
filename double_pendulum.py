@@ -72,3 +72,106 @@ class DoublePendulum:
         _sol = solve_ivp(self.__call__, (0, T), (theta1_0, omega1_0, 
                          theta2_0, omega2_0), t_eval=_t_eval)
         self._t, self._y = _sol.t, _sol.y
+
+    @property
+    def t(self):
+        """Return array with time points on (0, T], in steps of dt."""
+        if hasattr(self, "_t"):
+            return self._t
+        else:
+            raise AttributeError("Method solve has not been called")
+
+    @property
+    def theta1(self):
+        """Return array with theta as a function of t."""
+        if hasattr(self, "_y"):
+            return self._y[0]
+        else:
+            raise AttributeError("Method solve has not been called")
+
+    @property
+    def theta2(self):
+        """Return array with theta as a function of t."""
+        if hasattr(self, "_y"):
+            return self._y[2]
+        else:
+            raise AttributeError("Method solve has not been called")
+
+    @property
+    def x1(self):
+        """Return array with 1st pendulum x-coord. as a function of t."""
+        return self.L1*sin(self.theta1)
+
+    @property
+    def y1(self):
+        """Return array with 1st pendulum y-coord. as a function of t."""
+        return -self.L1*cos(self.theta1)
+
+    @property
+    def x2(self):
+        """Return array with 2nd pendulum x-coord. as a function of t."""
+        return self.x1 + self.L2*sin(self.theta2)
+
+    @property
+    def y2(self):
+        """Return array with 2nd pendulum y-coord. as a function of t."""
+        return self.y1 - self.L2*sin(self.theta2)
+
+    @property
+    def potential(self):
+        """Return array with total potential energy as a function of t."""
+        P1 = self.M1*self.g*(self.y1+self.L1)
+        P2 = self.M2*self.g*(self.y2+self.L1+self.L2)
+        return P1 + P2
+
+    @property
+    def vx1(self):
+        """Return array with 1st pendulum velocity (x axis).|"""
+        return np.gradient(self.x1, self.t)
+
+    @property
+    def vy1(self):
+        """Return array with 1st pendulum velocity (y axis)."""
+        return np.gradient(self.y1, self.t)
+
+    @property
+    def vx2(self):
+        """Return array with 2nd pendulum velocity (x axis)."""
+        return np.gradient(self.x2, self.t)
+
+    @property
+    def vy2(self):
+        """Return array with 2nd pendulum velocity (y axis)."""
+        return np.gradient(self.y2, self.t)
+
+    @property
+    def kinetic(self):
+        """Return array with total kinetic energy."""
+        K1 = 0.5*self.M1*(self.vx1**2 + self.vy1**2)
+        K2 = 0.5*self.M2*(self.vx2**2 + self.vy2**2)
+        return K1 + K2
+
+if __name__ == "__main__":
+    pend = DoublePendulum()
+    pend.solve((pi/2, pi/3, pi/4, pi/6), 10, 0.05)
+
+    plt.plot(pend.t, pend.potential, label=r"$P(t)$")
+    plt.title(r"Total potential energy $P$ as a function of time")
+    plt.xlabel(r"$t$")
+    plt.ylabel("Energy (J)")
+    plt.legend()
+
+    plt.figure()
+    plt.plot(pend.t, pend.kinetic, label=r"$K(t)$")
+    plt.title(r"Total kinetic energy $K$ as a function of time")
+    plt.xlabel(r"$t$")
+    plt.ylabel("Energy (J)")
+    plt.legend()
+
+    plt.figure()
+    plt.plot(pend.t, pend.potential+pend.kinetic, label=r"$E(t)$")
+    plt.title(r"Total energy $E = P + K$ as a function of time")
+    plt.xlabel(r"$t$")
+    plt.ylabel("Energy (J)")
+    plt.legend()
+    plt.show()
