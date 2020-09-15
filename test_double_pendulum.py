@@ -1,6 +1,7 @@
 import numpy as np
 import pytest
 from numpy import cos, sin
+from double_pendulum import *
 
 G = 9.81
 M1 = 1
@@ -76,3 +77,23 @@ def test_domega2_dt(theta1, theta2, expected):
         abs(domega2_dt(M1, M2, L1, L2, theta1, theta2, omega1, omega2)
             - expected) < 1e-10
     )
+
+def test_DoublePendulum_rad_vs_deg():
+    pend_rad = DoublePendulum()
+    pend_deg = DoublePendulum()
+    pend_rad.solve((pi/2, pi/3, pi/4, pi/6), 10, 0.1)
+    pend_deg.solve((90, 60, 45, 30), 10, 0.1, angles="deg")
+    assert np.all(pend_rad._t == pend_deg._t)
+    assert np.all(pend_rad._y == pend_deg._y)
+
+def test_DoublePendulum_check_theta_properties():
+    pend = DoublePendulum()
+    pend.solve((0, 0.15, 0, 0.15), 10, 0.01)
+    assert np.all(pend.theta1 == pend._y[0])
+    assert np.all(pend.theta2 == pend._y[2])
+
+def test_DoublePendulum_constant_total_energy():
+    tol = 0.1
+    pend = DoublePendulum()
+    pend.solve((0, 0.15, 0, 0.15), 10, 0.01)
+    assert np.average(pend.potential+pend.kinetic) < tol

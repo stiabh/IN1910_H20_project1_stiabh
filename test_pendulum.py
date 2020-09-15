@@ -47,4 +47,4 @@ def test_Pendulum_check_cartesian_coordinates_conv():
     pend = Pendulum(L=2)
     pend.solve((pi/2, pi/4), 10, 0.1)
     r2 = pend.x**2 + pend.y**2
-    np.all(abs(r2 - pend.L**2) < tol)
+    assert np.all(abs(r2 - pend.L**2) < tol)
