@@ -115,7 +115,7 @@ class DoublePendulum:
     @property
     def y2(self):
         """Return array with 2nd pendulum y-coord. as a function of t."""
-        return self.y1 - self.L2*sin(self.theta2)
+        return self.y1 - self.L2*cos(self.theta2)
 
     @property
     def potential(self):
@@ -153,7 +153,7 @@ class DoublePendulum:
 
 if __name__ == "__main__":
     pend = DoublePendulum()
-    pend.solve((pi/2, pi/3, pi/4, pi/6), 10, 0.05)
+    pend.solve((0, 0.15, 0, 0.15), 10, 0.05)
 
     plt.plot(pend.t, pend.potential, label=r"$P(t)$")
     plt.title(r"Total potential energy $P$ as a function of time")
