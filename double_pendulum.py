@@ -70,7 +70,7 @@ class DoublePendulum:
 
         _t_eval = np.arange(0, T+dt, dt)
         _sol = solve_ivp(self.__call__, (0, T), (theta1_0, omega1_0, 
-                         theta2_0, omega2_0), t_eval=_t_eval)
+                         theta2_0, omega2_0), t_eval=_t_eval, method="Radau")
         self._t, self._y = _sol.t, _sol.y
 
     @property
@@ -153,7 +153,7 @@ class DoublePendulum:
 
 if __name__ == "__main__":
     pend = DoublePendulum()
-    pend.solve((0, 0.15, 0, 0.15), 10, 0.05)
+    pend.solve((0, 0.15, 0, 0.15), 10, 0.01)
 
     plt.plot(pend.t, pend.potential, label=r"$P(t)$")
     plt.title(r"Total potential energy $P$ as a function of time")
