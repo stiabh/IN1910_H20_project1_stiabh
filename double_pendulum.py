@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 from numpy import cos, sin, pi
 from scipy.integrate import solve_ivp
 
@@ -57,6 +58,7 @@ class DoublePendulum:
         angles: deg (degrees) or rad (radians)
         """
         theta1_0, omega1_0, theta2_0, omega2_0 = y0[0], y0[1], y0[2], y0[3]
+        self.dt = dt
 
         if angles == "rad":
             pass
@@ -151,27 +153,52 @@ class DoublePendulum:
         K2 = 0.5*self.M2*(self.vx2**2 + self.vy2**2)
         return K1 + K2
 
+    def create_animation(self):
+        # Create empty figure
+        fig = plt.figure()
+        
+        # Configure figure
+        plt.axis('equal')
+        plt.axis('off')
+        plt.axis((-3, 3, -3, 3))
+        
+        # Make an "empty" plot object to be updated throughout the animation
+        self.pendulums, = plt.plot([], [], 'o-', lw=2)
+        
+        # Call FuncAnimation
+        self.animation = animation.FuncAnimation(fig,
+                                                 self._next_frame,
+                                                 frames=range(len(self.x1)), 
+                                                 repeat=None,
+                                                 interval=1000*self.dt, 
+                                                 blit=True)
+
+    def _next_frame(self, i):
+            self.pendulums.set_data((0, self.x1[i], self.x2[i]),
+                                    (0, self.y1[i], self.y2[i]))
+            return self.pendulums,
+
 if __name__ == "__main__":
     pend = DoublePendulum()
-    pend.solve((0, 0.15, 0, 0.15), 10, 0.01)
+    pend.solve((pi/2, pi/3, pi/4, pi/6), 10, 0.01)
 
-    plt.plot(pend.t, pend.potential, label=r"$P(t)$")
-    plt.title(r"Total potential energy $P$ as a function of time")
-    plt.xlabel(r"$t$")
-    plt.ylabel("Energy (J)")
-    plt.legend()
+#     plt.plot(pend.t, pend.potential, label=r"$P(t)$")
+#     plt.title(r"Total potential energy $P$ as a function of time")
+#     plt.xlabel(r"$t$")
+#     plt.ylabel("Energy (J)")
+#     plt.legend()
 
-    plt.figure()
-    plt.plot(pend.t, pend.kinetic, label=r"$K(t)$")
-    plt.title(r"Total kinetic energy $K$ as a function of time")
-    plt.xlabel(r"$t$")
-    plt.ylabel("Energy (J)")
-    plt.legend()
+#     plt.figure()
+#     plt.plot(pend.t, pend.kinetic, label=r"$K(t)$")
+#     plt.title(r"Total kinetic energy $K$ as a function of time")
+#     plt.xlabel(r"$t$")
+#     plt.ylabel("Energy (J)")
+#     plt.legend()
 
-    plt.figure()
-    plt.plot(pend.t, pend.potential+pend.kinetic, label=r"$E(t)$")
-    plt.title(r"Total energy $E = P + K$ as a function of time")
-    plt.xlabel(r"$t$")
-    plt.ylabel("Energy (J)")
-    plt.legend()
-    plt.show()
+#     plt.figure()
+#     plt.plot(pend.t, pend.potential+pend.kinetic, label=r"$E(t)$")
+#     plt.title(r"Total energy $E = P + K$ as a function of time")
+#     plt.xlabel(r"$t$")
+#     plt.ylabel("Energy (J)")
+#     plt.legend()
+#     plt.show()
