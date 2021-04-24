@@ -3,4 +3,4 @@ Stian Berg Hansen
 
 Completed all exercises. Did not do additional challenge.
 
-https://github.uio.no/IN1910/H20_project1_stiabh
+https://pages.github.uio.no/IN1910/IN1910_H20/docs/projects/project1/double_pendulum.html
